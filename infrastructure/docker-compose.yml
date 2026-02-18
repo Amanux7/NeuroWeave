@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # Module A: The Weaver (Orchestrator)
+  weaver:
+    build:
+      context: ../engines/weaver
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MODULE_NAME=weaver
+    env_file:
+      - ../engines/weaver/.env
+    volumes:
+      - ../engines/weaver:/app
+
+  # Module B: Gemini-UI (Frontend)
+  gemini-ui:
+    build:
+      context: ../apps/gemini-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - MODULE_NAME=gemini-ui
+    env_file:
+      - ../apps/gemini-ui/.env
+    volumes:
+      - ../apps/gemini-ui:/app
+      - /app/node_modules
+    depends_on:
+      - weaver
+
+  # Module C: Drift-Guard (QA/Healing)
+  drift-guard:
+    build:
+      context: ../engines/drift-guard
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    environment:
+      - MODULE_NAME=drift-guard
+    env_file:
+      - ../engines/drift-guard/.env
+    volumes:
+      - ../engines/drift-guard:/app
+
+  # Module D: Context-Bridge (Memory)
+  context-bridge:
+    build:
+      context: ../engines/context-bridge
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    environment:
+      - MODULE_NAME=context-bridge
+      - DB_HOST=db
+    env_file:
+      - ../engines/context-bridge/.env
+    depends_on:
+      - db
+    volumes:
+      - ../engines/context-bridge:/app
+
+  # Database (pgvector)
+  db:
+    image: ankane/pgvector
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=neuroweave
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

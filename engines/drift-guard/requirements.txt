@@ -1,0 +1,7 @@
+playwright>=1.42.0
+opencv-python-headless>=4.9.0
+numpy>=1.26.0
+pytest>=8.1.0
+fastapi>=0.110.0
+uvicorn>=0.29.0
+pillow>=10.2.0
