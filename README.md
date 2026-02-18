@@ -16,10 +16,10 @@ The platform is designed as a modular monorepo, with clear separation of concern
 ```mermaid
 graph TD
     User((User))
-    UI[Gemini-UI<br/>(Next.js)]
-    Weaver[Weaver Engine<br/>(LangGraph)]
-    Drift[Drift-Guard<br/>(Self-Healing)]
-    Context[Context-Bridge<br/>(Memory & MCP)]
+    UI["Gemini-UI<br/>(Next.js)"]
+    Weaver["Weaver Engine<br/>(LangGraph)"]
+    Drift["Drift-Guard<br/>(Self-Healing)"]
+    Context["Context-Bridge<br/>(Memory & MCP)"]
 
     User <-->|Interacts| UI
     UI <-->|Streams UI| Weaver
